@@ -2,6 +2,10 @@
 
 > Weather app as taught in https://youtu.be/JLc-hWsPTUY
 
+<p align="center">
+  <img height="550px" src="readme_resources/weather-app-screen.png">
+</p>
+
 ## Build Setup
 
 ``` bash
