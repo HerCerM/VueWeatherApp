@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :class="coldOrWarm()">
     <main>
       <div class="search-box">
         <input
@@ -53,6 +53,12 @@ export default {
           const weather = res.data.weather[0].main;
           this.weatherData = { city, temp, weather };
         });
+    },
+    coldOrWarm() {
+      if (this.weatherData) {
+        return this.weatherData.temp >= 25 ? "warm" : "cold";
+      }
+      return "cold";
     },
     todayDate() {
       let d = new Date();
@@ -117,9 +123,16 @@ body {
 }
 
 #app {
-  background-image: url("./assets/cold-bg.jpg");
   background-size: cover;
   background-position: bottom;
+}
+
+#app.cold {
+  background-image: url("./assets/cold-bg.jpg");
+}
+
+#app.warm {
+  background-image: url("./assets/warm-bg.jpg");
 }
 
 main {
