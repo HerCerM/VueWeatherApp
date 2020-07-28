@@ -9,6 +9,11 @@
           class="search-bar"
           placeholder="Search..."
         />
+        <transition name="fade">
+          <div v-show="locNotFound" class="error-msg">
+            No city, country or state matched your query
+          </div>
+        </transition>
       </div>
       <div class="weather-wrap" v-if="weatherData">
         <div class="location-box">
@@ -34,6 +39,7 @@ export default {
   data() {
     return {
       city: "",
+      locNotFound: false,
       weatherData: undefined,
       unitSystem: "metric",
       appid: "76b1e4110c2d7ceb4c599b4f96c5e43e",
@@ -52,7 +58,17 @@ export default {
           const temp = res.data.main.temp;
           const weather = res.data.weather[0].main;
           this.weatherData = { city, temp, weather };
+        })
+        .catch(err => {
+          this.showErrorMsg();
         });
+      this.city = "";
+    },
+    showErrorMsg() {
+      this.locNotFound = true;
+      setTimeout(() => {
+        this.locNotFound = false;
+      }, 3000);
     },
     coldOrWarm() {
       if (this.weatherData) {
@@ -125,6 +141,7 @@ body {
 #app {
   background-size: cover;
   background-position: bottom;
+  transition: 0.4s;
 }
 
 #app.cold {
@@ -145,6 +162,11 @@ main {
   );
 }
 
+.search-box {
+  position: relative;
+  top: 0;
+}
+
 .search-box .search-bar {
   width: 100%;
   padding: 0.8em;
@@ -153,6 +175,7 @@ main {
   outline: none;
   border-radius: 0 1em 0 1em;
   transition: all 0.3s;
+  font-size: 1.3rem;
   background-color: rgba(255, 255, 255, 0.35);
 }
 
@@ -170,7 +193,7 @@ main {
 }
 
 .location-box .location {
-  margin-top: 2rem;
+  margin-top: 5.5rem;
   font-weight: 400;
   font-size: 2.3rem;
   text-shadow: 2px 2px rgba(0, 0, 0, 0.2);
@@ -195,8 +218,8 @@ main {
   font-size: 4rem;
   font-weight: 1000;
   text-shadow: 0.05em 0.05em rgba(0, 0, 0, 0.2);
-  margin-top: 3rem;
-  margin-bottom: 0.5rem;
+  margin-top: 4rem;
+  margin-bottom: 1.5rem;
   box-shadow: 0.08em 0.08em rgba(0, 0, 0, 0.2);
 }
 
@@ -204,5 +227,35 @@ main {
   font-style: italic;
   font-size: 3rem;
   text-shadow: 2px 2px rgba(0, 0, 0, 0.2);
+}
+
+// Error message
+
+.error-msg {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  transform: translateY(115%);
+  background-color: #db4035;
+  padding: 0.8em;
+  border-radius: 0.3em;
+  color: #fff;
+}
+
+// Duration of both enter and leave transitions
+.fade-enter-active,
+.fade-leave-active {
+  transition: 0.4s;
+}
+
+// Move down on enter
+.fade-enter {
+  transform: translateY(2em);
+}
+
+// Opacity cero on enter and leave
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
