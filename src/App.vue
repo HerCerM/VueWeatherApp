@@ -140,7 +140,7 @@ body {
 
 #app {
   background-size: cover;
-  background-position: bottom;
+  background-position: top;
   transition: 0.4s;
 }
 

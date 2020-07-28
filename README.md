@@ -1,6 +1,6 @@
-# weather-app
+# Vue Weather App
 
-> A Vue.js project
+> Weather app as taught in https://youtu.be/JLc-hWsPTUY
 
 ## Build Setup
 

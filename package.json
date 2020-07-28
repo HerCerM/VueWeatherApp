@@ -1,6 +1,6 @@
 {
-  "name": "weather-app",
-  "description": "A Vue.js project",
+  "name": "vue-weather-app",
+  "description": "Weather app as taught in https://youtu.be/JLc-hWsPTUY",
   "version": "1.0.0",
   "author": "Hernán Cervera <hjcerveram@hotmail.com>",
   "license": "MIT",
