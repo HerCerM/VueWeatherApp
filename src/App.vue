@@ -2,16 +2,24 @@
   <div id="app">
     <main>
       <div class="search-box">
-        <input type="text" class="search-bar" placeholder="Search..." />
+        <input
+          @keyup.enter="fetchWeather"
+          v-model="city"
+          type="text"
+          class="search-bar"
+          placeholder="Search..."
+        />
       </div>
-      <div class="weather-wrap">
+      <div class="weather-wrap" v-if="weatherData">
         <div class="location-box">
-          <div class="location">Mérida, Yucatán</div>
-          <div class="date">29 de julio de 2020</div>
+          <div class="location">{{ weatherData.city }}</div>
+          <div class="date">{{ todayDate() }}</div>
         </div>
         <div class="weather-box">
-          <div class="temp">31°c</div>
-          <div class="weather">Soleado</div>
+          <div class="temp">
+            {{ weatherData.temp | round | posfixTemp(this.unitSystem) }}
+          </div>
+          <div class="weather">{{ weatherData.weather }}</div>
         </div>
       </div>
     </main>
@@ -19,12 +27,78 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "app",
   data() {
     return {
-      appid: "76b1e4110c2d7ceb4c599b4f96c5e43e"
+      city: "",
+      weatherData: undefined,
+      unitSystem: "metric",
+      appid: "76b1e4110c2d7ceb4c599b4f96c5e43e",
+      baseUrl: "http://api.openweathermap.org/data/2.5/weather"
     };
+  },
+  methods: {
+    fetchWeather() {
+      axios
+        .get(
+          `${this.baseUrl}?q=${this.city}&units=${this.unitSystem}&appid=${this.appid}`
+        )
+        .then(res => {
+          console.log(JSON.stringify(res));
+          const city = res.data.name;
+          const temp = res.data.main.temp;
+          const weather = res.data.weather[0].main;
+          this.weatherData = { city, temp, weather };
+        });
+    },
+    todayDate() {
+      let d = new Date();
+      let months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ];
+      let days = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday"
+      ];
+      let day = days[d.getDay()];
+      let date = d.getDate();
+      let month = months[d.getMonth()];
+      let year = d.getFullYear();
+      return `${day} ${date} ${month} ${year}`;
+    }
+  },
+  filters: {
+    posfixTemp(temp, units) {
+      let posfix = "";
+      if (units === "metric") {
+        posfix = "°c";
+      } else if (units == "imperial") {
+        posfix = "°f";
+      }
+      return temp + posfix;
+    },
+    round(num) {
+      return Math.round(num);
+    }
   }
 };
 </script>
